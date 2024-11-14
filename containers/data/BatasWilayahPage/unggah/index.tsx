@@ -39,7 +39,7 @@ export default function UnggahBatasWilayahPage() {
             });
             setTimeout(() => {
                 router.push(THIS_ROUTE.URL);
-            }, 2500);
+            }, 1500);
         },
         onError: (err) => {
             toast.current?.show({
