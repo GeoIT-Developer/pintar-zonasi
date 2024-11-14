@@ -6,6 +6,7 @@ import { LayoutContext } from './context/layoutcontext';
 import { MenuProvider } from './context/menucontext';
 import Link from 'next/link';
 import { AppMenuItem } from '@/types';
+import { ROUTE } from '@/configs/route';
 
 const AppMenu = () => {
     const { layoutConfig } = useContext(LayoutContext);
@@ -13,17 +14,15 @@ const AppMenu = () => {
     const model: AppMenuItem[] = [
         {
             label: 'Beranda',
-            items: [
-                { label: 'Zonasi', icon: 'pi pi-fw pi-bullseye', to: '/' }, 
-            ]
+            items: [{ label: 'Zonasi', icon: 'pi pi-fw pi-bullseye', to: ROUTE.HOME.URL }]
         },
         {
             label: 'Data',
             items: [
-                { label: 'Batas Wilayah', icon: 'pi pi-fw pi-map', to: '/data/batas-wilayah' },
-                { label: 'Jalan', icon: 'pi pi-fw pi-wave-pulse', to: '/data/jalan' },
-                { label: 'Sekolah', icon: 'pi pi-fw pi-building-columns', to: '/data/sekolah' },
-                { label: 'Peserta Didik', icon: 'pi pi-fw pi-users', to: '/data/peserta-didik' }
+                { label: 'Batas Wilayah', icon: 'pi pi-fw pi-map', to: ROUTE.DATA.BATAS_WILAYAH.URL },
+                { label: 'Jalan', icon: 'pi pi-fw pi-wave-pulse', to: ROUTE.DATA.JALAN.URL },
+                { label: 'Sekolah', icon: 'pi pi-fw pi-building-columns', to: ROUTE.DATA.SEKOLAH.URL },
+                { label: 'Peserta Didik', icon: 'pi pi-fw pi-users', to: ROUTE.DATA.PESERTA_DIDIK.URL }
             ]
         },
         {
