@@ -1,0 +1,13 @@
+.maplibregl-popup-content td {
+    font-size: 12px;
+    font-family: sans-serif;
+    font-weight: normal;
+    color: black;
+}
+
+.maplibregl-popup-content {
+    max-height: 50vh;
+    overflow-y: auto;
+    padding: 10px;
+    box-sizing: border-box;
+}
