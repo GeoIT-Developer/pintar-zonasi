@@ -13,7 +13,7 @@ const INITIAL_MAP = {
 
 let geoControl: GeolocateControl | undefined = undefined;
 
-const useMapLibre = (options?: MapOptions) => {
+const useMapLibre = (options?: MapOptions, triggerUserLocation = true) => {
     const mapContainer = useRef<HTMLDivElement>(null);
     const map = useRef<Map | null>(null);
     const { style: basemapStyle } = useBasemapContext();
@@ -60,7 +60,9 @@ const useMapLibre = (options?: MapOptions) => {
 
         map.current.on('load', () => {
             setMapStatus(LoadingState.SUCCESS);
-            geoControl?.trigger();
+            if (triggerUserLocation) {
+                geoControl?.trigger();
+            }
         });
 
         let locationStatusUpdateTimeout: NodeJS.Timeout;
