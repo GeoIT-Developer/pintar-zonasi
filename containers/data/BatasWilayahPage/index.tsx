@@ -30,7 +30,7 @@ export default function BatasWilayahPage() {
             setListData(
                 eData.map((item, idx) => {
                     return { ...item, no: idx + 1 };
-                })
+                }),
             );
         },
         onError: (err) => {
@@ -38,9 +38,9 @@ export default function BatasWilayahPage() {
                 severity: 'error',
                 summary: 'Error!',
                 detail: err,
-                life: 3000
+                life: 3000,
             });
-        }
+        },
     });
 
     const apiDeleteBatasWilayah = useAPI<ObjectLiteral, string>(API.deleteBatasWilayah, {
@@ -49,7 +49,7 @@ export default function BatasWilayahPage() {
             toast.current?.show({
                 severity: 'success',
                 summary: 'Success',
-                detail: 'Data berhasil dihapus!'
+                detail: 'Data berhasil dihapus!',
             });
             cancelDialogDelete();
         },
@@ -57,9 +57,9 @@ export default function BatasWilayahPage() {
             toast.current?.show({
                 severity: 'error',
                 summary: 'Error!',
-                detail: err
+                detail: err,
             });
-        }
+        },
     });
 
     function cancelDialogDelete() {
@@ -88,9 +88,17 @@ export default function BatasWilayahPage() {
                         className="mt-3"
                         header={
                             <div className="flex justify-content-between">
-                                <Button type="button" icon="pi pi-plus" label="Tambah Data" outlined onClick={() => router.push(THIS_ROUTE.UNGGAH.URL)}></Button>
+                                <Button
+                                    type="button"
+                                    icon="pi pi-plus"
+                                    label="Tambah Data"
+                                    outlined
+                                    onClick={() => router.push(THIS_ROUTE.UNGGAH.URL)}
+                                />
                             </div>
                         }
+                        paginator
+                        rows={10}
                     >
                         <Column field="no" header="No" sortable style={{ flexGrow: 1, flexBasis: '160px' }} />
                         <Column field="name" header="Nama" sortable style={{ flexGrow: 1, flexBasis: '160px' }} className="font-bold" />
@@ -120,8 +128,8 @@ export default function BatasWilayahPage() {
                                                 icon: 'pi pi-times',
                                                 command: () => {
                                                     setDialogDelete({ show: true, id: row.id, name: row.name });
-                                                }
-                                            }
+                                                },
+                                            },
                                         ]}
                                         onClick={() => {
                                             window.open(THIS_ROUTE.DETAIL.setURL(row.id), '_blank');
@@ -143,7 +151,15 @@ export default function BatasWilayahPage() {
                 footer={
                     <>
                         <Button type="button" label="Batal" icon="pi pi-times" onClick={cancelDialogDelete} />
-                        <Button type="button" label="Hapus" severity="danger" icon="pi pi-trash" onClick={() => onClickDelete(dialogDelete.id)} text loading={apiDeleteBatasWilayah.loading} />
+                        <Button
+                            type="button"
+                            label="Hapus"
+                            severity="danger"
+                            icon="pi pi-trash"
+                            onClick={() => onClickDelete(dialogDelete.id)}
+                            text
+                            loading={apiDeleteBatasWilayah.loading}
+                        />
                     </>
                 }
             >

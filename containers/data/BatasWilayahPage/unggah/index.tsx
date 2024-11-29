@@ -29,26 +29,29 @@ export default function UnggahBatasWilayahPage() {
     const [inputFile, setInputFile] = useState<File>();
     const [geojsonData, setGeojsonData] = useState<ObjectLiteral>();
 
-    const apiUnggahBatasWilayah = useAPI<ObjectLiteral, { eFile: File; name: string; description: string }>(API.postUploadBatasWilayah, {
-        onSuccess: () => {
-            cancelDialogUnggah();
-            toast.current?.show({
-                severity: 'success',
-                summary: 'Success',
-                detail: 'Data berhasil diunggah!',
-            });
-            setTimeout(() => {
-                router.push(THIS_ROUTE.URL);
-            }, 1500);
+    const apiUnggahBatasWilayah = useAPI<ObjectLiteral, { eFile: File; name: string; description: string }>(
+        API.postUploadBatasWilayah,
+        {
+            onSuccess: () => {
+                cancelDialogUnggah();
+                toast.current?.show({
+                    severity: 'success',
+                    summary: 'Success',
+                    detail: 'Data berhasil diunggah!',
+                });
+                setTimeout(() => {
+                    router.push(THIS_ROUTE.URL);
+                }, 1500);
+            },
+            onError: (err) => {
+                toast.current?.show({
+                    severity: 'error',
+                    summary: 'Error!',
+                    detail: err,
+                });
+            },
         },
-        onError: (err) => {
-            toast.current?.show({
-                severity: 'error',
-                summary: 'Error!',
-                detail: err,
-            });
-        },
-    });
+    );
 
     function cancelDialogUnggah() {
         setDialogUnggah(false);
@@ -111,7 +114,7 @@ export default function UnggahBatasWilayahPage() {
                             value={inputData.deskripsi}
                             onChange={(e) => {
                                 const eVal = e.target.value;
-                                if (eVal.length > 50) return;
+                                if (eVal.length > 250) return;
                                 setInputData((oldState) => {
                                     return { ...oldState, deskripsi: eVal };
                                 });
