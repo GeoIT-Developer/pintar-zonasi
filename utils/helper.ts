@@ -7,6 +7,7 @@ import shp from 'shpjs';
 import Maplibregl, { LngLatLike, MapGeoJSONFeature, MapMouseEvent } from 'maplibre-gl';
 import * as turf from '@turf/turf';
 import { BBOXType } from '@/types/bbox.type';
+import Papa from 'papaparse';
 
 export const getDateTimeString = (eDate: string | null | undefined): string => {
     if (!eDate) return '';
@@ -187,6 +188,54 @@ export function getBboxFromGeojson(geojsonData: ObjectLiteral) {
     }
 }
 
+export function getBboxFromPointFeatures(pointFeatures: ObjectLiteral[]): [number, number, number, number] | null {
+    if (pointFeatures.length === 0) {
+        return null; // No points, no bounding box
+    }
+
+    let minX = Infinity,
+        minY = Infinity,
+        maxX = -Infinity,
+        maxY = -Infinity;
+
+    for (const feature of pointFeatures) {
+        const [x, y] = feature.geometry.coordinates;
+
+        if (x < minX) minX = x;
+        if (y < minY) minY = y;
+        if (x > maxX) maxX = x;
+        if (y > maxY) maxY = y;
+    }
+
+    return [minX, minY, maxX, maxY];
+}
+
 export const isWithinBbox = (lngLat: { lng: number; lat: number }, bbox: BBOXType) => {
     return lngLat.lng >= bbox[0] && lngLat.lng <= bbox[2] && lngLat.lat >= bbox[1] && lngLat.lat <= bbox[3];
 };
+
+export function cleanCSVRow(eData: ObjectLiteral[]): ObjectLiteral[] {
+    return eData.filter((row) => {
+        return Object.values(row).some((value) => value.trim() !== '');
+    });
+}
+
+export async function csvFileToJson(eFile: File): Promise<ObjectLiteral[]> {
+    return new Promise((resolve, reject) => {
+        Papa.parse(eFile, {
+            header: true,
+            complete: (results) => {
+                const eData = results.data;
+                if (Array.isArray(eData) && eData.length > 0) {
+                    const cleanData = cleanCSVRow(eData as ObjectLiteral[]);
+                    resolve(cleanData);
+                } else {
+                    reject('No data found!');
+                }
+            },
+            error(error) {
+                reject(error);
+            },
+        });
+    });
+}
