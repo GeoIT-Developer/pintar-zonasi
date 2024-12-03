@@ -7,6 +7,8 @@ import React, { useState } from 'react';
 import MapCard from './MapCard';
 import PreviewCSVCard from '@/components/preview/PreviewCSVCard';
 import FormSection from './FormSection';
+import { Button } from 'primereact/button';
+import { formatNumberWithSeparator, sumByKey } from '@/utils';
 
 const COLUMN = [
     { field: 'no', label: 'No' },
@@ -37,7 +39,27 @@ export default function UnggahSekolahPage() {
                 <BasemapProvider>
                     <MapLibreProvider triggerUserLocation={false}>
                         <MapCard jsonData={jsonData} inputFile={inputFile} />
-                        <PreviewCSVCard dataset={jsonData} column={COLUMN} />
+                        <PreviewCSVCard
+                            dataset={jsonData}
+                            column={COLUMN}
+                            leftAction={
+                                <>
+                                    <Button
+                                        type="button"
+                                        severity="secondary"
+                                        label={`${formatNumberWithSeparator(jsonData.length)} Sekolah`}
+                                        outlined
+                                    />
+                                    <Button
+                                        severity="secondary"
+                                        label={`Total Kuota = ${formatNumberWithSeparator(
+                                            sumByKey(jsonData, 'kuota'),
+                                        )}`}
+                                        outlined
+                                    />
+                                </>
+                            }
+                        />
                     </MapLibreProvider>
                 </BasemapProvider>
             )}

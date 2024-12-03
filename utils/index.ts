@@ -225,8 +225,8 @@ export const generateRandomId = (length = 10): string => {
 
 export function sumByKey<T extends Record<string, any>>(array: T[], key: keyof T): number {
     return array.reduce((sum, obj) => {
-        const value = obj[key];
-        return sum + (typeof value === 'number' ? value : 0);
+        const value = Number(obj[key]);
+        return sum + (value || 0);
     }, 0);
 }
 
