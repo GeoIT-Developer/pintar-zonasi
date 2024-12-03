@@ -12,6 +12,7 @@ type Props = {
     column?: ColumnType[];
     actionColumn?: (row: ObjectLiteral) => ReactNode;
     action?: ReactNode;
+    leftAction?: ReactNode;
 };
 
 function globalSearch(searchTxt: string, listData: ObjectLiteral[]) {
@@ -30,7 +31,7 @@ function globalSearch(searchTxt: string, listData: ObjectLiteral[]) {
     return filteredList;
 }
 
-export default function PreviewCSVCard({ dataset, column = [], actionColumn, action }: Props) {
+export default function PreviewCSVCard({ dataset, column = [], actionColumn, action, leftAction }: Props) {
     const [header, setHeader] = useState<ColumnType[]>(column);
     const [listData, setListData] = useState<ObjectLiteral[]>([]);
     const [listShownData, setListShownData] = useState<ObjectLiteral[]>([]);
@@ -88,15 +89,18 @@ export default function PreviewCSVCard({ dataset, column = [], actionColumn, act
                     rows={10}
                     header={
                         <div className="flex justify-content-between">
-                            <span className="p-input-icon-left">
-                                <i className="pi pi-search" />
-                                <InputText
-                                    value={inputSearch}
-                                    onChange={(e) => setInputSearch(e.target.value)}
-                                    placeholder="Cari..."
-                                    size="small"
-                                />
-                            </span>
+                            <div className="flex gap-2">
+                                <span className="p-input-icon-left">
+                                    <i className="pi pi-search" />
+                                    <InputText
+                                        value={inputSearch}
+                                        onChange={(e) => setInputSearch(e.target.value)}
+                                        placeholder="Cari..."
+                                        size="small"
+                                    />
+                                </span>
+                                {leftAction}
+                            </div>
                             {action}
                         </div>
                     }
