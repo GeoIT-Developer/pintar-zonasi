@@ -36,9 +36,9 @@ export default function SekolahDetailPage({ metadata_id }: { metadata_id: string
         <div className="grid">
             <div className="col-12">
                 <div className="card">
-                    <h5>Data Sekolah : {detailData?.name}</h5>
-                    <p>{detailData?.description}</p>
-                    <p>Diunggah Pada : {getDateTimeString(detailData?.created_at)}</p>
+                    <h5 className="mb-0">Data Sekolah : {detailData?.name}</h5>
+                    <p className="mb-0">{detailData?.description}</p>
+                    <p className="mb-0">Diunggah Pada : {getDateTimeString(detailData?.created_at)}</p>
                 </div>
             </div>
 
