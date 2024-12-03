@@ -13,6 +13,7 @@ type Props = {
     actionColumn?: (row: ObjectLiteral) => ReactNode;
     action?: ReactNode;
     leftAction?: ReactNode;
+    loading?: boolean;
 };
 
 function globalSearch(searchTxt: string, listData: ObjectLiteral[]) {
@@ -31,7 +32,7 @@ function globalSearch(searchTxt: string, listData: ObjectLiteral[]) {
     return filteredList;
 }
 
-export default function PreviewCSVCard({ dataset, column = [], actionColumn, action, leftAction }: Props) {
+export default function PreviewCSVCard({ dataset, column = [], actionColumn, action, leftAction, loading }: Props) {
     const [header, setHeader] = useState<ColumnType[]>(column);
     const [listData, setListData] = useState<ObjectLiteral[]>([]);
     const [listShownData, setListShownData] = useState<ObjectLiteral[]>([]);
@@ -82,6 +83,7 @@ export default function PreviewCSVCard({ dataset, column = [], actionColumn, act
         <div className="col-12">
             <div className="card p-2">
                 <DataTable
+                    loading={loading}
                     value={listShownData}
                     scrollable
                     className="mt-3"

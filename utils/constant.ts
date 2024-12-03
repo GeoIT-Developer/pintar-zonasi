@@ -37,3 +37,14 @@ export const KATEGORI_SEKOLAH = {
 };
 
 export const LIST_KATEGORI_SEKOLAH = Object.values(KATEGORI_SEKOLAH);
+
+export const LIST_JENIS_KELAMIN = [
+    {
+        id: 'Laki-Laki',
+        label: 'Laki-Laki',
+    },
+    {
+        id: 'Perempuan',
+        label: 'Perempuan',
+    },
+];

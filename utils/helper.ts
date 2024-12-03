@@ -1,6 +1,7 @@
 import { ObjectLiteral } from '@/types/object-literal.interface';
 import { SpatialFileEnum } from '@/types/spatial-file.enum';
 import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 // @ts-ignore
 import toGeoJSON from '@mapbox/togeojson';
 import shp from 'shpjs';
@@ -9,9 +10,20 @@ import * as turf from '@turf/turf';
 import { BBOXType } from '@/types/bbox.type';
 import Papa from 'papaparse';
 
+dayjs.extend(customParseFormat);
+
 export const getDateTimeString = (eDate: string | null | undefined): string => {
     if (!eDate) return '';
     const inputDate = dayjs(eDate).format('YYYY-MM-DD HH:mm:ss');
+    return inputDate;
+};
+
+export const formatDate = (
+    eDate: Date | string | null | undefined,
+    { from, to }: { from?: string; to: string },
+): string => {
+    if (!eDate) return '';
+    const inputDate = dayjs(eDate, from).format(to);
     return inputDate;
 };
 
