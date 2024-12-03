@@ -222,3 +222,14 @@ export const generateRandomId = (length = 10): string => {
 
     return result;
 };
+
+export function sumByKey<T extends Record<string, any>>(array: T[], key: keyof T): number {
+    return array.reduce((sum, obj) => {
+        const value = obj[key];
+        return sum + (typeof value === 'number' ? value : 0);
+    }, 0);
+}
+
+export function formatNumberWithSeparator(num: number): string {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}

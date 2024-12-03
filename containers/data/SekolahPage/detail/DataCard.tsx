@@ -11,6 +11,7 @@ import { useMapLibreContext } from '@/components/map/MapLibreContext';
 import EditDialog from './EditDialog';
 import { SekolahType } from '@/types/response/sekolah-metadata.interface';
 import TambahDialog from './TambahDialog';
+import { formatNumberWithSeparator, sumByKey } from '@/utils';
 
 const COLUMN = [
     { field: 'no', label: 'No' },
@@ -24,7 +25,7 @@ const COLUMN = [
     { field: 'keterangan', label: 'Keterangan' },
 ];
 
-type Props = { metadata_id: string; onRefresh: () => void; listData: ObjectLiteral[] };
+type Props = { metadata_id: string; onRefresh: () => void; listData: SekolahType[] };
 const InitialDialogEdit = { show: false, id: '', name: '', row: undefined };
 
 export default function DataCard({ metadata_id, onRefresh, listData }: Props) {
@@ -68,6 +69,14 @@ export default function DataCard({ metadata_id, onRefresh, listData }: Props) {
 
     function cancelDialogEdit() {
         setDialogEdit(InitialDialogEdit);
+    }
+
+    function onClickCopy(text: string) {
+        toast.current?.show({
+            severity: 'success',
+            summary: 'Copied!',
+        });
+        navigator.clipboard.writeText(text);
     }
 
     return (
@@ -115,6 +124,27 @@ export default function DataCard({ metadata_id, onRefresh, listData }: Props) {
                         icon="pi pi-plus"
                         onClick={() => setShowDialogTambah(true)}
                     />
+                }
+                leftAction={
+                    <>
+                        <Button
+                            type="button"
+                            severity="secondary"
+                            label={`${formatNumberWithSeparator(listData.length)} Sekolah`}
+                            outlined
+                            onClick={() => {
+                                onClickCopy(String(listData.length));
+                            }}
+                        />
+                        <Button
+                            severity="secondary"
+                            label={`Total Kuota = ${formatNumberWithSeparator(sumByKey(listData, 'kuota'))}`}
+                            outlined
+                            onClick={() => {
+                                onClickCopy(String(sumByKey(listData, 'kuota')));
+                            }}
+                        />
+                    </>
                 }
             />
 
