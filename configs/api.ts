@@ -183,6 +183,9 @@ const API = {
 
         return HOST.post(`api/jalan/upload/`, formData);
     },
+    putGenerateTopologyJalan: (id: string) => {
+        return HOST.put(`api/jalan/generate-topology/${id}/`);
+    },
 };
 
 export default API;
