@@ -18,9 +18,10 @@ function generateLayerId() {
 type Props = {
     jsonData: ObjectLiteral[];
     label?: string;
+    fitbounds?: boolean;
 };
 
-function usePointLayer({ jsonData, label }: Props) {
+function usePointLayer({ jsonData, label, fitbounds = true }: Props) {
     const { myMap, mapStatus } = useMapLibreContext();
 
     const pointSetting = useRef(generateLayerId());
@@ -146,10 +147,11 @@ function usePointLayer({ jsonData, label }: Props) {
             map.on('mouseenter', pointLayer, setCursorPointer);
             map.on('mouseleave', pointLayer, removeCursorPointer);
             map.on('click', pointLayer, onClickLayer);
-
-            const bbox = getBboxFromPointFeatures(pointFeatures);
-            if (bbox) {
-                map.fitBounds(bbox as LngLatBoundsLike);
+            if (fitbounds) {
+                const bbox = getBboxFromPointFeatures(pointFeatures);
+                if (bbox) {
+                    map.fitBounds(bbox as LngLatBoundsLike);
+                }
             }
         };
 
@@ -170,7 +172,7 @@ function usePointLayer({ jsonData, label }: Props) {
                 myMap.off('click', pointLayer, onClickLayer);
             }
         };
-    }, [myMap, mapStatus, jsonData, label]);
+    }, [myMap, mapStatus, jsonData, label, fitbounds]);
 
     return pointSetting;
 }

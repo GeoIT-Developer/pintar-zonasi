@@ -4,6 +4,7 @@ import { BBOXType } from '@/types/bbox.type';
 import { JalanMetadataType } from '@/types/response/jalan-metadata.interface';
 import { getBboxFromGeojson } from '@/utils/helper';
 import React, { useEffect, useState } from 'react';
+import TestMenu from './TestMenu';
 
 export default function MapCard({ detailData }: { detailData: JalanMetadataType }) {
     const [bbox, setBbox] = useState<BBOXType>();
@@ -25,7 +26,7 @@ export default function MapCard({ detailData }: { detailData: JalanMetadataType 
     return (
         <div className="col-12">
             <div className="card p-2">
-                <MainMap />
+                <MainMap>{detailData.topology_status === 'CREATED' && <TestMenu detailData={detailData} />}</MainMap>
             </div>
         </div>
     );

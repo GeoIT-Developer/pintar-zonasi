@@ -186,6 +186,46 @@ const API = {
     putGenerateTopologyJalan: (id: string) => {
         return HOST.put(`api/jalan/generate-topology/${id}/`);
     },
+    getRoutingJalan: ({
+        id,
+        end,
+        start,
+    }: {
+        id: string;
+        start: { lat: number; lon: number };
+        end: { lat: number; lon: number };
+    }) => {
+        return HOST.get(`api/jalan/route/${id}/`, {
+            params: {
+                'start-lat': start.lat,
+                'start-lon': start.lon,
+                'end-lat': end.lat,
+                'end-lon': end.lon,
+            },
+        });
+    },
+    getIsochroneJalan: ({
+        id,
+        lat,
+        lon,
+        time,
+        filter,
+    }: {
+        id: string;
+        lat: number;
+        lon: number;
+        time: number;
+        filter?: string;
+    }) => {
+        return HOST.get(`api/jalan/isochrone/${id}/`, {
+            params: {
+                lat,
+                lon,
+                time,
+                filter: filter,
+            },
+        });
+    },
 };
 
 export default API;
