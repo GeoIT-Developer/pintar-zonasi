@@ -60,14 +60,17 @@ export default function UnggahJalanPage() {
     function onClickUnggah() {
         if (!inputData.nama || !inputFile) return;
         apiUnggahJalan.call({ name: inputData.nama, description: inputData.deskripsi, eFile: inputFile });
+        toast.current?.show({
+            severity: 'info',
+            summary: 'Mengunggah...',
+            life: 5000,
+        });
     }
 
     useEffect(() => {
         if (inputFile) {
             getGeojsonData(inputFile)
                 .then((res) => {
-                    const eFeat = res?.features[0];
-                    const eProp = eFeat?.properties;
                     setGeojsonData(res);
                 })
                 .catch((err) => {

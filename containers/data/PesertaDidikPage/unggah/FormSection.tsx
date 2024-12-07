@@ -73,6 +73,11 @@ export default function FormSection({ inputFile, setInputFile, setJsonData }: Pr
             description: inputData.deskripsi,
             eFile: inputFile,
         });
+        toast.current?.show({
+            severity: 'info',
+            summary: 'Mengunggah...',
+            life: 5000,
+        });
     }
 
     useEffect(() => {

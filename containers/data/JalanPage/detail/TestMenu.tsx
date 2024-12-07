@@ -160,9 +160,19 @@ export default function TestMenu({ detailData }: { detailData: JalanMetadataType
 
     function onClickStartRouting() {
         apiRouting.call({ id: detailData.id, ...routingCoordinate });
+        toast.current?.show({
+            severity: 'info',
+            summary: 'Mencari rute...',
+            life: 5000,
+        });
     }
     function onClickStartIsochrone() {
         apiIsochrone.call({ id: detailData.id, time: isoTime, ...isochroneCoordinate });
+        toast.current?.show({
+            severity: 'info',
+            summary: 'Memproses...',
+            life: 5000,
+        });
     }
 
     usePolygonLayer({ geojsonData: apiIsochrone.data || {} });

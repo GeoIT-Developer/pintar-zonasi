@@ -60,6 +60,11 @@ export default function UnggahBatasWilayahPage() {
     function onClickUnggah() {
         if (!inputData.nama || !inputFile) return;
         apiUnggahBatasWilayah.call({ name: inputData.nama, description: inputData.deskripsi, eFile: inputFile });
+        toast.current?.show({
+            severity: 'info',
+            summary: 'Mengunggah...',
+            life: 5000,
+        });
     }
 
     useEffect(() => {
