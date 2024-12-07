@@ -251,3 +251,11 @@ export async function csvFileToJson(eFile: File): Promise<ObjectLiteral[]> {
         });
     });
 }
+
+export function concaveHullGeojson(feature: ObjectLiteral) {
+    const vertices = turf.coordAll(feature as turf.AllGeoJSON);
+    const points = turf.featureCollection(vertices.map((coord) => turf.point(coord)));
+
+    const hull = turf.concave(points, { units: 'kilometers', maxEdge: 0.5 });
+    return hull;
+}
