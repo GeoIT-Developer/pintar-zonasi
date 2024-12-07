@@ -4,7 +4,7 @@ import { ObjectLiteral } from '@/types/object-literal.interface';
 import React from 'react';
 
 export default function MapCard({ geojsonData, inputFile }: { geojsonData: ObjectLiteral; inputFile: File }) {
-    usePolygonLayer(geojsonData);
+    usePolygonLayer({ geojsonData });
 
     return (
         <div className="col-12">

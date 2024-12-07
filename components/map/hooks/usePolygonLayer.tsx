@@ -15,7 +15,27 @@ function generateLayerId() {
     return { uid, geojsonSource, lineLayer, polygonLayer };
 }
 
-function usePolygonLayer(geojsonData: ObjectLiteral) {
+type Props = {
+    geojsonData: ObjectLiteral;
+    color?: string;
+    fillColor?: string;
+    fillOutlineColor?: string;
+    fillOpacity?: number;
+    lineColor?: string;
+    lineWidth?: number;
+    disableLine?: boolean;
+};
+
+function usePolygonLayer({
+    geojsonData,
+    color = '#FF6400',
+    fillColor,
+    fillOpacity = 0.3,
+    fillOutlineColor,
+    lineColor,
+    lineWidth = 3,
+    disableLine = false,
+}: Props) {
     const { myMap, mapStatus } = useMapLibreContext();
 
     const polygonSetting = useRef(generateLayerId());
@@ -31,13 +51,13 @@ function usePolygonLayer(geojsonData: ObjectLiteral) {
         const popup = new MapLibreGL.Popup({
             closeButton: false,
             closeOnClick: true,
-            className: 'text-xl text-black font-bold !my-0'
+            className: 'text-xl text-black font-bold !my-0',
         });
 
         const onClickLayer = (
             e: MapMouseEvent & {
                 features?: MapGeoJSONFeature[] | undefined;
-            } & Object
+            } & Object,
         ) => {
             if (myMap) {
                 myMap.getCanvas().style.cursor = 'pointer';
@@ -74,8 +94,8 @@ function usePolygonLayer(geojsonData: ObjectLiteral) {
                 type: 'geojson',
                 data: {
                     type: 'FeatureCollection',
-                    features: getValObject(geojsonData, 'features', [])
-                }
+                    features: getValObject(geojsonData, 'features', []),
+                },
             });
 
             // ===================== Add POLYGON ========================================
@@ -85,27 +105,29 @@ function usePolygonLayer(geojsonData: ObjectLiteral) {
                 type: 'fill',
                 source: geojsonSource,
                 paint: {
-                    'fill-color': '#FF6400',
-                    'fill-opacity': 0.3,
-                    'fill-outline-color': '#088'
-                }
+                    'fill-color': fillColor || color,
+                    'fill-opacity': fillOpacity,
+                    'fill-outline-color': fillOutlineColor || color,
+                },
             });
 
             // ===================== Add LINE ========================================
 
-            map.addLayer({
-                id: lineLayer,
-                type: 'line',
-                source: geojsonSource,
-                layout: {
-                    'line-join': 'round',
-                    'line-cap': 'round'
-                },
-                paint: {
-                    'line-color': '#FF6400',
-                    'line-width': 3
-                }
-            });
+            if (!disableLine) {
+                map.addLayer({
+                    id: lineLayer,
+                    type: 'line',
+                    source: geojsonSource,
+                    layout: {
+                        'line-join': 'round',
+                        'line-cap': 'round',
+                    },
+                    paint: {
+                        'line-color': lineColor || color,
+                        'line-width': lineWidth,
+                    },
+                });
+            }
 
             map.on('mouseenter', polygonLayer, setCursorPointer);
             map.on('mouseleave', polygonLayer, removeCursorPointer);
@@ -134,7 +156,18 @@ function usePolygonLayer(geojsonData: ObjectLiteral) {
                 myMap.off('click', polygonLayer, onClickLayer);
             }
         };
-    }, [myMap, mapStatus, geojsonData]);
+    }, [
+        myMap,
+        mapStatus,
+        geojsonData,
+        fillColor,
+        color,
+        fillOpacity,
+        fillOutlineColor,
+        disableLine,
+        lineColor,
+        lineWidth,
+    ]);
 
     return polygonSetting;
 }
