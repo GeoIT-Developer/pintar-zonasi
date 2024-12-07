@@ -7,6 +7,7 @@ import 'primeicons/primeicons.css';
 import '@/styles/layout/layout.scss';
 import '@/styles/demo/Demos.scss';
 import '@/styles/custom.css';
+import ToastProvider from '@/layout/context/ToastContext';
 
 interface RootLayoutProps {
     children: React.ReactNode;
@@ -20,7 +21,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
             </head>
             <body>
                 <PrimeReactProvider>
-                    <LayoutProvider>{children}</LayoutProvider>
+                    <LayoutProvider>
+                        <ToastProvider>{children}</ToastProvider>
+                    </LayoutProvider>
                 </PrimeReactProvider>
             </body>
         </html>
