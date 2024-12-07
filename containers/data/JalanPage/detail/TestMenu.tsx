@@ -21,7 +21,7 @@ type RoutingType = {
 
 export default function TestMenu({ detailData }: { detailData: JalanMetadataType }) {
     const toast = useToastContext();
-    const { myMap, mapStatus } = useMapLibreContext();
+    const { myMap } = useMapLibreContext();
     const [startRouting, setStartRouting] = useState(false);
     const [startIsochrone, setStartIsochrone] = useState(false);
     const [routingCoordinate, setRoutingCoordinate] = useState<RoutingType>({
