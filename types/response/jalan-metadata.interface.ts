@@ -17,18 +17,16 @@ interface Bbox {
 }
 
 export function getStatusSeverity(status: string | undefined | null) {
-    const severity =
-        status === 'UPLOADED'
-            ? 'info'
-            : status === 'CREATING'
-            ? 'warning'
-            : status === 'DEPLOYING'
-            ? 'warning'
-            : status === 'DEPLOYED'
-            ? 'success'
-            : status === 'CREATED'
-            ? 'success'
-            : 'danger';
-
-    return severity;
+    switch (status) {
+        case 'UPLOADED':
+            return 'info';
+        case 'CREATING':
+        case 'DEPLOYING':
+            return 'warning';
+        case 'DEPLOYED':
+        case 'CREATED':
+            return 'success';
+        default:
+            return 'danger';
+    }
 }

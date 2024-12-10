@@ -1,3 +1,5 @@
+import { LayerType } from '@/types/layer.type';
+import { ObjectLiteral } from '@/types/object-literal.interface';
 import { PesertaDidikType } from '@/types/response/peserta-didik-metadata.interface';
 import { SekolahType } from '@/types/response/sekolah-metadata.interface';
 import axios from 'axios';
@@ -225,6 +227,35 @@ const API = {
                 filter: filter,
             },
         });
+    },
+
+    getListProject: (type?: string) => HOST.get(`api/project/`, { params: { type } }),
+    getProjectDetail: (id: string) => HOST.get(`api/project/${id}/`),
+    deleteProject: (id: string) => HOST.delete(`api/project/delete/${id}/`),
+    postCreateProject: ({
+        name,
+        description,
+        level,
+        type,
+    }: {
+        name: string;
+        description: string;
+        level: string;
+        type: string;
+    }) => {
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('level', level);
+        formData.append('type', type);
+        formData.append('description', description);
+
+        return HOST.post(`api/project/create/`, formData);
+    },
+    putSaveLayerProject: ({ id, layers }: { id: string; layers: LayerType[] }) => {
+        return HOST.put(`api/project/save-layer/${id}/`, { layers: layers });
+    },
+    putUpdateStatusProject: ({ id, status }: { id: string; status: string }) => {
+        return HOST.put(`api/project/update-status/${id}/${status}/`);
     },
 };
 

@@ -14,7 +14,7 @@ const AppMenu = () => {
     const model: AppMenuItem[] = [
         {
             label: 'Beranda',
-            items: [{ label: 'Zonasi', icon: 'pi pi-fw pi-bullseye', to: ROUTE.HOME.URL }]
+            items: [{ label: 'Cek Zonasi', icon: 'pi pi-fw pi-bullseye', to: ROUTE.HOME.URL }],
         },
         {
             label: 'Data',
@@ -22,24 +22,24 @@ const AppMenu = () => {
                 { label: 'Batas Wilayah', icon: 'pi pi-fw pi-map', to: ROUTE.DATA.BATAS_WILAYAH.URL },
                 { label: 'Jalan', icon: 'pi pi-fw pi-wave-pulse', to: ROUTE.DATA.JALAN.URL },
                 { label: 'Sekolah', icon: 'pi pi-fw pi-building-columns', to: ROUTE.DATA.SEKOLAH.URL },
-                { label: 'Peserta Didik', icon: 'pi pi-fw pi-users', to: ROUTE.DATA.PESERTA_DIDIK.URL }
-            ]
+                { label: 'Peserta Didik', icon: 'pi pi-fw pi-users', to: ROUTE.DATA.PESERTA_DIDIK.URL },
+            ],
         },
         {
-            label: 'Project',
+            label: 'Zonasi',
             items: [
-                { label: 'New Project', icon: 'pi pi-fw pi-plus-circle', to: '/project/new' },
+                { label: 'Project Zonasi', icon: 'pi pi-fw pi-book', to: ROUTE.ZONASI.URL },
                 ...['001', '002', '003', '004', '005', '006'].map((item) => {
                     return { label: `Project-${item}`, icon: 'pi pi-fw pi-server', to: `/project/${item}` };
-                })
-            ]
+                }),
+            ],
         },
         {
             label: 'Home',
             items: [
                 { label: 'App', icon: 'pi pi-fw pi-home', to: '/demo' },
-                { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/demo/dashboard' }
-            ]
+                { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/demo/dashboard' },
+            ],
         },
         {
             label: 'UI Components',
@@ -59,22 +59,27 @@ const AppMenu = () => {
                 { label: 'Message', icon: 'pi pi-fw pi-comment', to: '/demo/uikit/message' },
                 { label: 'File', icon: 'pi pi-fw pi-file', to: '/demo/uikit/file' },
                 { label: 'Chart', icon: 'pi pi-fw pi-chart-bar', to: '/demo/uikit/charts' },
-                { label: 'Misc', icon: 'pi pi-fw pi-circle', to: '/demo/uikit/misc' }
-            ]
+                { label: 'Misc', icon: 'pi pi-fw pi-circle', to: '/demo/uikit/misc' },
+            ],
         },
         {
             label: 'Prime Blocks',
             items: [
                 { label: 'Free Blocks', icon: 'pi pi-fw pi-eye', to: '/demo/blocks', badge: 'NEW' },
-                { label: 'All Blocks', icon: 'pi pi-fw pi-globe', url: 'https://blocks.primereact.org', target: '_blank' }
-            ]
+                {
+                    label: 'All Blocks',
+                    icon: 'pi pi-fw pi-globe',
+                    url: 'https://blocks.primereact.org',
+                    target: '_blank',
+                },
+            ],
         },
         {
             label: 'Utilities',
             items: [
                 { label: 'PrimeIcons', icon: 'pi pi-fw pi-prime', to: '/demo/utilities/icons' },
-                { label: 'PrimeFlex', icon: 'pi pi-fw pi-desktop', url: 'https://primeflex.org/', target: '_blank' }
-            ]
+                { label: 'PrimeFlex', icon: 'pi pi-fw pi-desktop', url: 'https://primeflex.org/', target: '_blank' },
+            ],
         },
         {
             label: 'Pages',
@@ -84,7 +89,7 @@ const AppMenu = () => {
                 {
                     label: 'Landing',
                     icon: 'pi pi-fw pi-globe',
-                    to: '/demo/landing'
+                    to: '/demo/landing',
                 },
                 {
                     label: 'Auth',
@@ -93,41 +98,41 @@ const AppMenu = () => {
                         {
                             label: 'Login',
                             icon: 'pi pi-fw pi-sign-in',
-                            to: '/demo/auth/login'
+                            to: '/demo/auth/login',
                         },
                         {
                             label: 'Error',
                             icon: 'pi pi-fw pi-times-circle',
-                            to: '/demo/auth/error'
+                            to: '/demo/auth/error',
                         },
                         {
                             label: 'Access Denied',
                             icon: 'pi pi-fw pi-lock',
-                            to: '/demo/auth/access'
-                        }
-                    ]
+                            to: '/demo/auth/access',
+                        },
+                    ],
                 },
                 {
                     label: 'Crud',
                     icon: 'pi pi-fw pi-pencil',
-                    to: '/demo/pages/crud'
+                    to: '/demo/pages/crud',
                 },
                 {
                     label: 'Timeline',
                     icon: 'pi pi-fw pi-calendar',
-                    to: '/demo/pages/timeline'
+                    to: '/demo/pages/timeline',
                 },
                 {
                     label: 'Not Found',
                     icon: 'pi pi-fw pi-exclamation-circle',
-                    to: '/demo/pages/notfound'
+                    to: '/demo/pages/notfound',
                 },
                 {
                     label: 'Empty',
                     icon: 'pi pi-fw pi-circle-off',
-                    to: '/demo/pages/empty'
-                }
-            ]
+                    to: '/demo/pages/empty',
+                },
+            ],
         },
         {
             label: 'Hierarchy',
@@ -142,15 +147,15 @@ const AppMenu = () => {
                             items: [
                                 { label: 'Submenu 1.1.1', icon: 'pi pi-fw pi-bookmark' },
                                 { label: 'Submenu 1.1.2', icon: 'pi pi-fw pi-bookmark' },
-                                { label: 'Submenu 1.1.3', icon: 'pi pi-fw pi-bookmark' }
-                            ]
+                                { label: 'Submenu 1.1.3', icon: 'pi pi-fw pi-bookmark' },
+                            ],
                         },
                         {
                             label: 'Submenu 1.2',
                             icon: 'pi pi-fw pi-bookmark',
-                            items: [{ label: 'Submenu 1.2.1', icon: 'pi pi-fw pi-bookmark' }]
-                        }
-                    ]
+                            items: [{ label: 'Submenu 1.2.1', icon: 'pi pi-fw pi-bookmark' }],
+                        },
+                    ],
                 },
                 {
                     label: 'Submenu 2',
@@ -161,17 +166,17 @@ const AppMenu = () => {
                             icon: 'pi pi-fw pi-bookmark',
                             items: [
                                 { label: 'Submenu 2.1.1', icon: 'pi pi-fw pi-bookmark' },
-                                { label: 'Submenu 2.1.2', icon: 'pi pi-fw pi-bookmark' }
-                            ]
+                                { label: 'Submenu 2.1.2', icon: 'pi pi-fw pi-bookmark' },
+                            ],
                         },
                         {
                             label: 'Submenu 2.2',
                             icon: 'pi pi-fw pi-bookmark',
-                            items: [{ label: 'Submenu 2.2.1', icon: 'pi pi-fw pi-bookmark' }]
-                        }
-                    ]
-                }
-            ]
+                            items: [{ label: 'Submenu 2.2.1', icon: 'pi pi-fw pi-bookmark' }],
+                        },
+                    ],
+                },
+            ],
         },
         {
             label: 'Get Started',
@@ -179,33 +184,43 @@ const AppMenu = () => {
                 {
                     label: 'Documentation',
                     icon: 'pi pi-fw pi-question',
-                    to: '/demo/documentation'
+                    to: '/demo/documentation',
                 },
                 {
                     label: 'Figma',
                     url: 'https://www.dropbox.com/scl/fi/bhfwymnk8wu0g5530ceas/sakai-2023.fig?rlkey=u0c8n6xgn44db9t4zkd1brr3l&dl=0',
                     icon: 'pi pi-fw pi-pencil',
-                    target: '_blank'
+                    target: '_blank',
                 },
                 {
                     label: 'View Source',
                     icon: 'pi pi-fw pi-search',
                     url: 'https://github.com/primefaces/sakai-react',
-                    target: '_blank'
-                }
-            ]
-        }
+                    target: '_blank',
+                },
+            ],
+        },
     ];
 
     return (
         <MenuProvider>
             <ul className="layout-menu">
                 {model.map((item, i) => {
-                    return !item?.seperator ? <AppMenuitem item={item} root={true} index={i} key={item.label} /> : <li className="menu-separator"></li>;
+                    return !item?.seperator ? (
+                        <AppMenuitem item={item} root={true} index={i} key={item.label} />
+                    ) : (
+                        <li className="menu-separator"></li>
+                    );
                 })}
 
                 <Link href="https://blocks.primereact.org" target="_blank" style={{ cursor: 'pointer' }}>
-                    <img alt="Prime Blocks" className="w-full mt-3" src={`/layout/images/banner-primeblocks${layoutConfig.colorScheme === 'light' ? '' : '-dark'}.png`} />
+                    <img
+                        alt="Prime Blocks"
+                        className="w-full mt-3"
+                        src={`/layout/images/banner-primeblocks${
+                            layoutConfig.colorScheme === 'light' ? '' : '-dark'
+                        }.png`}
+                    />
                 </Link>
             </ul>
         </MenuProvider>
