@@ -6,8 +6,12 @@ import { getBboxFromPointFeatures, propertiesTableDiv } from '@/utils/helper';
 import MapLibreGL, { LngLatBoundsLike, Map, MapGeoJSONFeature, MapMouseEvent } from 'maplibre-gl';
 import { useEffect, useRef } from 'react';
 
-function generateLayerId() {
-    const uid = generateRandomId();
+export function getPointLayerUid(uid: string) {
+    return `point-layer-${uid}`;
+}
+
+function generateLayerId(id?: string | undefined) {
+    const uid = id || generateRandomId();
     const geojsonSource = `geojson-source-${uid}`;
 
     const symbolLayer = `symbol-layer-${uid}`;
@@ -19,12 +23,28 @@ type Props = {
     jsonData: ObjectLiteral[];
     label?: string;
     fitbounds?: boolean;
+    uid?: string;
+    beforeLayer?: string;
+    circleColor?: string;
+    circleRadius?: number;
+    circleStrokeColor?: string;
+    circleStrokeWidth?: number;
 };
 
-function usePointLayer({ jsonData, label, fitbounds = true }: Props) {
+function usePointLayer({
+    jsonData,
+    label,
+    fitbounds = true,
+    uid,
+    beforeLayer,
+    circleColor = '#0079ed',
+    circleStrokeColor = 'white',
+    circleStrokeWidth = 2,
+    circleRadius = 4,
+}: Props) {
     const { myMap, mapStatus } = useMapLibreContext();
 
-    const pointSetting = useRef(generateLayerId());
+    const pointSetting = useRef(generateLayerId(uid));
 
     useEffect(() => {
         if (!Array.isArray(jsonData)) return;
@@ -64,17 +84,23 @@ function usePointLayer({ jsonData, label, fitbounds = true }: Props) {
             }
         };
 
+        function cleanLayer(map: Map) {
+            try {
+                listLayer.forEach((layer) => {
+                    if (map.getLayer(layer)) {
+                        map.removeLayer(layer);
+                    }
+                });
+                listSource.forEach((src) => {
+                    if (map.getSource(src)) {
+                        map.removeSource(src);
+                    }
+                });
+            } catch (err) {}
+        }
+
         const onMapLoad = (map: Map) => {
-            listLayer.forEach((layer) => {
-                if (map.getLayer(layer)) {
-                    map.removeLayer(layer);
-                }
-            });
-            listSource.forEach((src) => {
-                if (map.getSource(src)) {
-                    map.removeSource(src);
-                }
-            });
+            cleanLayer(map);
 
             const pointFeatures: {
                 type: 'Feature';
@@ -109,18 +135,22 @@ function usePointLayer({ jsonData, label, fitbounds = true }: Props) {
             });
 
             // ===================== Add POINT ========================================
-
-            map.addLayer({
+            const layerProps: MapLibreGL.AddLayerObject = {
                 id: pointLayer,
                 type: 'circle',
                 source: geojsonSource,
                 paint: {
-                    'circle-color': '#0079ed',
-                    'circle-radius': 4,
-                    'circle-stroke-color': 'white',
-                    'circle-stroke-width': 2,
+                    'circle-color': circleColor,
+                    'circle-radius': circleRadius,
+                    'circle-stroke-color': circleStrokeColor,
+                    'circle-stroke-width': circleStrokeWidth,
                 },
-            });
+            };
+            if (beforeLayer && map.getLayer(beforeLayer)) {
+                map.addLayer(layerProps, beforeLayer);
+            } else {
+                map.addLayer(layerProps);
+            }
 
             if (label) {
                 // ===================== Add SYMBOL ========================================
@@ -170,9 +200,21 @@ function usePointLayer({ jsonData, label, fitbounds = true }: Props) {
                 myMap.off('mouseenter', pointLayer, setCursorPointer);
                 myMap.off('mouseleave', pointLayer, removeCursorPointer);
                 myMap.off('click', pointLayer, onClickLayer);
+                cleanLayer(myMap);
             }
         };
-    }, [myMap, mapStatus, jsonData, label, fitbounds]);
+    }, [
+        myMap,
+        mapStatus,
+        jsonData,
+        label,
+        fitbounds,
+        circleColor,
+        circleRadius,
+        circleStrokeColor,
+        circleStrokeWidth,
+        beforeLayer,
+    ]);
 
     return pointSetting;
 }

@@ -78,17 +78,23 @@ function usePolygonLayer({
             }
         };
 
+        function cleanLayer(map: Map) {
+            try {
+                listLayer.forEach((layer) => {
+                    if (map.getLayer(layer)) {
+                        map.removeLayer(layer);
+                    }
+                });
+                listSource.forEach((src) => {
+                    if (map.getSource(src)) {
+                        map.removeSource(src);
+                    }
+                });
+            } catch (err) {}
+        }
+
         const onMapLoad = (map: Map) => {
-            listLayer.forEach((layer) => {
-                if (map.getLayer(layer)) {
-                    map.removeLayer(layer);
-                }
-            });
-            listSource.forEach((src) => {
-                if (map.getSource(src)) {
-                    map.removeSource(src);
-                }
-            });
+            cleanLayer(map);
 
             map.addSource(geojsonSource, {
                 type: 'geojson',
@@ -154,6 +160,7 @@ function usePolygonLayer({
                 myMap.off('mouseenter', polygonLayer, setCursorPointer);
                 myMap.off('mouseleave', polygonLayer, removeCursorPointer);
                 myMap.off('click', polygonLayer, onClickLayer);
+                cleanLayer(myMap);
             }
         };
     }, [

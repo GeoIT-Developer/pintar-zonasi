@@ -62,17 +62,23 @@ function useLineLayer({ geojsonData, lineColor = '#FF6400', lineWidth = 3 }: Pro
             }
         };
 
+        function cleanLayer(map: Map) {
+            try {
+                listLayer.forEach((layer) => {
+                    if (map.getLayer(layer)) {
+                        map.removeLayer(layer);
+                    }
+                });
+                listSource.forEach((src) => {
+                    if (map.getSource(src)) {
+                        map.removeSource(src);
+                    }
+                });
+            } catch (err) {}
+        }
+
         const onMapLoad = (map: Map) => {
-            listLayer.forEach((layer) => {
-                if (map.getLayer(layer)) {
-                    map.removeLayer(layer);
-                }
-            });
-            listSource.forEach((src) => {
-                if (map.getSource(src)) {
-                    map.removeSource(src);
-                }
-            });
+            cleanLayer(map);
 
             map.addSource(geojsonSource, {
                 type: 'geojson',
@@ -123,6 +129,7 @@ function useLineLayer({ geojsonData, lineColor = '#FF6400', lineWidth = 3 }: Pro
                 myMap.off('mouseenter', lineLayer, setCursorPointer);
                 myMap.off('mouseleave', lineLayer, removeCursorPointer);
                 myMap.off('click', lineLayer, onClickLayer);
+                cleanLayer(myMap);
             }
         };
     }, [myMap, mapStatus, geojsonData, lineColor, lineWidth]);

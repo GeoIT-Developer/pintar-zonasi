@@ -40,7 +40,15 @@ type WMSSettingType = {
 
 const DEFAULT_BASE_URL = process.env.NEXT_PUBLIC_GEOSERVER_URL || '';
 
-function useWMTSLayer({ baseUrl = DEFAULT_BASE_URL, layer, filter, style, workspace, bbox, clickable }: WMSSettingType) {
+function useWMTSLayer({
+    baseUrl = DEFAULT_BASE_URL,
+    layer,
+    filter,
+    style,
+    workspace,
+    bbox,
+    clickable,
+}: WMSSettingType) {
     const { myMap, mapStatus } = useMapLibreContext();
 
     const layerSetting = useRef(generateLayerId());
@@ -84,6 +92,17 @@ function useWMTSLayer({ baseUrl = DEFAULT_BASE_URL, layer, filter, style, worksp
             }
         };
 
+        function cleanLayer(map: Map) {
+            try {
+                if (map.getLayer(wmtsLayer)) {
+                    map.removeLayer(wmtsLayer);
+                }
+                if (map.getSource(layerSource)) {
+                    map.removeSource(layerSource);
+                }
+            } catch (err) {}
+        }
+
         const onMapLoad = (map: Map) => {
             const params = new URLSearchParams();
             params.set('service', 'WMTS');
@@ -97,12 +116,7 @@ function useWMTSLayer({ baseUrl = DEFAULT_BASE_URL, layer, filter, style, worksp
             }
             const wmtsUrl = `${baseUrl}${workspace}/gwc/service/wmts?${params.toString()}&TILEMATRIX=EPSG:900913:{z}&TILECOL={x}&TILEROW={y}`;
 
-            if (map.getLayer(wmtsLayer)) {
-                map.removeLayer(wmtsLayer);
-            }
-            if (map.getSource(layerSource)) {
-                map.removeSource(layerSource);
-            }
+            cleanLayer(map);
 
             const srcSetting: MapLibreGL.SourceSpecification = {
                 type: 'vector',
@@ -161,6 +175,7 @@ function useWMTSLayer({ baseUrl = DEFAULT_BASE_URL, layer, filter, style, worksp
                     myMap.off('click', wmtsLayer, onClickLayer);
                     myMap.off('mouseenter', wmtsLayer, setCursorPointer);
                     myMap.off('mouseleave', wmtsLayer, removeCursorPointer);
+                    cleanLayer(myMap);
                 }
             }
         };

@@ -20,8 +20,12 @@ Example :
 
 */
 
-function generateLayerId() {
-    const uid = generateRandomId();
+export function getWMSLayerUid(uid: string) {
+    return `wms-layer-${uid}`;
+}
+
+function generateLayerId(id?: string | undefined) {
+    const uid = id || generateRandomId();
     const layerSource = `raster-layer-source-${uid}`;
 
     const wmsLayer = `wms-layer-${uid}`;
@@ -36,14 +40,28 @@ type WMSSettingType = {
     cql_filter?: string;
     bbox: BBOXType | null | undefined; // pass null if not want to use bbox
     clickable?: boolean;
+    fitbounds?: boolean;
+    uid?: string;
+    beforeLayer?: string;
 };
 
 const DEFAULT_BASE_URL = process.env.NEXT_PUBLIC_GEOSERVER_URL || '';
 
-function useWMSLayer({ baseUrl = DEFAULT_BASE_URL, layers, cql_filter = '', styles, workspace, bbox, clickable }: WMSSettingType) {
+function useWMSLayer({
+    baseUrl = DEFAULT_BASE_URL,
+    layers,
+    cql_filter = '',
+    styles,
+    workspace,
+    bbox,
+    clickable,
+    fitbounds = true,
+    uid,
+    beforeLayer,
+}: WMSSettingType) {
     const { myMap, mapStatus } = useMapLibreContext();
 
-    const layerSetting = useRef(generateLayerId());
+    const layerSetting = useRef(generateLayerId(uid));
 
     useEffect(() => {
         if (bbox === undefined) return;
@@ -57,6 +75,17 @@ function useWMSLayer({ baseUrl = DEFAULT_BASE_URL, layers, cql_filter = '', styl
             closeOnClick: true,
             className: 'text-xl text-black font-bold !my-0',
         });
+
+        function cleanLayer(map: Map) {
+            try {
+                if (map.getLayer(wmsLayer)) {
+                    map.removeLayer(wmsLayer);
+                }
+                if (map.getSource(layerSource)) {
+                    map.removeSource(layerSource);
+                }
+            } catch (err) {}
+        }
 
         const onClickLayer = (e: MapMouseEvent) => {
             if (myMap) {
@@ -82,7 +111,10 @@ function useWMSLayer({ baseUrl = DEFAULT_BASE_URL, layers, cql_filter = '', styl
                 params.set('query_layers', `${workspace}:${layers}`);
                 params.set('width', String(canvasWidth));
                 params.set('height', String(canvasHeight));
-                params.set('bbox', `${canvasBbox.getWest()},${canvasBbox.getSouth()},${canvasBbox.getEast()},${canvasBbox.getNorth()}`);
+                params.set(
+                    'bbox',
+                    `${canvasBbox.getWest()},${canvasBbox.getSouth()},${canvasBbox.getEast()},${canvasBbox.getNorth()}`,
+                );
                 params.set('x', String(Math.floor(e.point.x)));
                 params.set('y', String(Math.floor(e.point.y)));
 
@@ -121,12 +153,7 @@ function useWMSLayer({ baseUrl = DEFAULT_BASE_URL, layers, cql_filter = '', styl
             }
             const wmsUrl = `${baseUrl}${workspace}/wms?${params.toString()}&bbox={bbox-epsg-3857}&CQL_FILTER=${cql_filter}`;
 
-            if (map.getLayer(wmsLayer)) {
-                map.removeLayer(wmsLayer);
-            }
-            if (map.getSource(layerSource)) {
-                map.removeSource(layerSource);
-            }
+            cleanLayer(map);
 
             const srcSetting: MapLibreGL.SourceSpecification = {
                 type: 'raster',
@@ -139,16 +166,21 @@ function useWMSLayer({ baseUrl = DEFAULT_BASE_URL, layers, cql_filter = '', styl
             } else {
                 map.addSource(layerSource, srcSetting);
             }
-            map.addLayer({
+            const layerProps: MapLibreGL.AddLayerObject = {
                 id: wmsLayer,
                 type: 'raster',
                 source: layerSource,
-            });
+            };
+            if (beforeLayer && map.getLayer(beforeLayer)) {
+                map.addLayer(layerProps, beforeLayer);
+            } else {
+                map.addLayer(layerProps);
+            }
 
             if (clickable) {
                 map.on('click', onClickLayer);
             }
-            if (bbox) {
+            if (bbox && fitbounds) {
                 map.fitBounds(bbox as LngLatBoundsLike);
             }
         };
@@ -168,6 +200,7 @@ function useWMSLayer({ baseUrl = DEFAULT_BASE_URL, layers, cql_filter = '', styl
                 if (clickable) {
                     myMap.off('click', onClickLayer);
                 }
+                cleanLayer(myMap);
             }
         };
     }, [myMap, mapStatus, layers, cql_filter, styles, workspace, baseUrl, bbox, clickable]);
