@@ -15,6 +15,7 @@ export const GEOSERVER_SETTING = {
     },
     STYLES: {
         ORANGE_POLYGON: 'orange_polygon',
+        ORANGE_LINE_STRIP: 'orange_line_strip',
         BLACK_LINE: 'black_line',
     },
 };

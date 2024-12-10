@@ -233,3 +233,8 @@ export function sumByKey<T extends Record<string, any>>(array: T[], key: keyof T
 export function formatNumberWithSeparator(num: number): string {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 }
+
+export function roundToDecimal(inNumber: number, decimalPlaces = 3) {
+    const factor = Math.pow(10, decimalPlaces);
+    return Math.round(inNumber * factor) / factor;
+}

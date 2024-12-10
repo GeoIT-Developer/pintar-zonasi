@@ -33,18 +33,21 @@ const API = {
         name,
         type,
         level,
+        zonasi,
     }: {
         eFile: File;
         name: string;
         description: string;
         level: string;
         type: string;
+        zonasi: boolean;
     }) => {
         const formData = new FormData();
         formData.append('file', eFile);
         formData.append('name', name);
         formData.append('level', level);
         formData.append('type', type);
+        formData.append('zonasi', String(zonasi));
         formData.append('description', description);
 
         return HOST.post(`api/sekolah/upload/`, formData);
@@ -256,6 +259,16 @@ const API = {
     },
     putUpdateStatusProject: ({ id, status }: { id: string; status: string }) => {
         return HOST.put(`api/project/update-status/${id}/${status}/`);
+    },
+
+    getListProjectZonasi: (level?: string) => HOST.get(`api/project/zonasi/`, { params: { level } }),
+    getMyZonasi: ({ id, lat, lon }: { id: string; lat: number; lon: number }) => {
+        return HOST.get(`api/project/zonasi/${id}/`, {
+            params: {
+                lat,
+                lon,
+            },
+        });
     },
 };
 
