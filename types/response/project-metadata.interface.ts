@@ -1,5 +1,4 @@
 import { LayerType } from '../layer.type';
-import { ObjectLiteral } from '../object-literal.interface';
 
 export interface ProjectMetadataType {
     id: string;
