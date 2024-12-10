@@ -43,6 +43,7 @@ type WMSSettingType = {
     fitbounds?: boolean;
     uid?: string;
     beforeLayer?: string;
+    show?: boolean;
 };
 
 const DEFAULT_BASE_URL = process.env.NEXT_PUBLIC_GEOSERVER_URL || '';
@@ -58,12 +59,14 @@ function useWMSLayer({
     fitbounds = true,
     uid,
     beforeLayer,
+    show = true,
 }: WMSSettingType) {
     const { myMap, mapStatus } = useMapLibreContext();
 
     const layerSetting = useRef(generateLayerId(uid));
 
     useEffect(() => {
+        if (!show) return;
         if (bbox === undefined) return;
         if (mapStatus !== LoadingState.SUCCESS) return;
         if (!layers || !workspace) return;
@@ -203,7 +206,20 @@ function useWMSLayer({
                 cleanLayer(myMap);
             }
         };
-    }, [myMap, mapStatus, layers, cql_filter, styles, workspace, baseUrl, bbox, clickable]);
+    }, [
+        myMap,
+        mapStatus,
+        layers,
+        cql_filter,
+        styles,
+        workspace,
+        baseUrl,
+        bbox,
+        clickable,
+        beforeLayer,
+        fitbounds,
+        show,
+    ]);
 
     return layerSetting;
 }

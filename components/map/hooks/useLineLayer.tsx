@@ -17,14 +17,25 @@ type Props = {
     geojsonData: ObjectLiteral;
     lineColor?: string;
     lineWidth?: number;
+    show?: boolean;
+    beforeLayer?: string;
+    fitbounds?: boolean;
 };
 
-function useLineLayer({ geojsonData, lineColor = '#FF6400', lineWidth = 3 }: Props) {
+function useLineLayer({
+    geojsonData,
+    lineColor = '#FF6400',
+    lineWidth = 3,
+    show = true,
+    beforeLayer,
+    fitbounds = true,
+}: Props) {
     const { myMap, mapStatus } = useMapLibreContext();
 
     const lineSetting = useRef(generateLayerId());
 
     useEffect(() => {
+        if (!show) return;
         if (!geojsonData) return;
         if (mapStatus !== LoadingState.SUCCESS) return;
         const { geojsonSource, lineLayer } = lineSetting.current;
@@ -90,7 +101,7 @@ function useLineLayer({ geojsonData, lineColor = '#FF6400', lineWidth = 3 }: Pro
 
             // ===================== Add LINE ========================================
 
-            map.addLayer({
+            const layerProps: MapLibreGL.AddLayerObject = {
                 id: lineLayer,
                 type: 'line',
                 source: geojsonSource,
@@ -102,14 +113,19 @@ function useLineLayer({ geojsonData, lineColor = '#FF6400', lineWidth = 3 }: Pro
                     'line-color': lineColor,
                     'line-width': lineWidth,
                 },
-            });
+            };
+            if (beforeLayer && map.getLayer(beforeLayer)) {
+                map.addLayer(layerProps, beforeLayer);
+            } else {
+                map.addLayer(layerProps);
+            }
 
             map.on('mouseenter', lineLayer, setCursorPointer);
             map.on('mouseleave', lineLayer, removeCursorPointer);
             map.on('click', lineLayer, onClickLayer);
 
             const bbox = getBboxFromGeojson(geojsonData);
-            if (bbox) {
+            if (bbox && fitbounds) {
                 map.fitBounds(bbox as LngLatBoundsLike);
             }
         };
@@ -132,7 +148,7 @@ function useLineLayer({ geojsonData, lineColor = '#FF6400', lineWidth = 3 }: Pro
                 cleanLayer(myMap);
             }
         };
-    }, [myMap, mapStatus, geojsonData, lineColor, lineWidth]);
+    }, [myMap, mapStatus, geojsonData, lineColor, lineWidth, show, beforeLayer, fitbounds]);
 
     return lineSetting;
 }

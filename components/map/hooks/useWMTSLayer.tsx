@@ -36,6 +36,7 @@ type WMSSettingType = {
     filter?: MapLibreGL.FilterSpecification;
     bbox: BBOXType | null | undefined; // pass null if not want to use bbox
     clickable?: boolean;
+    show?: boolean;
 };
 
 const DEFAULT_BASE_URL = process.env.NEXT_PUBLIC_GEOSERVER_URL || '';
@@ -48,12 +49,14 @@ function useWMTSLayer({
     workspace,
     bbox,
     clickable,
+    show = true,
 }: WMSSettingType) {
     const { myMap, mapStatus } = useMapLibreContext();
 
     const layerSetting = useRef(generateLayerId());
 
     useEffect(() => {
+        if (!show) return;
         if (bbox === undefined) return;
         if (mapStatus !== LoadingState.SUCCESS) return;
         if (!layer || !workspace) return;
@@ -179,7 +182,7 @@ function useWMTSLayer({
                 }
             }
         };
-    }, [myMap, mapStatus, layer, filter, style, workspace, baseUrl, bbox, clickable]);
+    }, [myMap, mapStatus, layer, filter, style, workspace, baseUrl, bbox, clickable, show]);
 
     return layerSetting;
 }

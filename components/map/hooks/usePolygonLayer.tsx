@@ -6,8 +6,12 @@ import { getBboxFromGeojson, propertiesTableDiv } from '@/utils/helper';
 import MapLibreGL, { LngLatBoundsLike, Map, MapGeoJSONFeature, MapMouseEvent } from 'maplibre-gl';
 import { useEffect, useRef } from 'react';
 
-function generateLayerId() {
-    const uid = generateRandomId();
+export function getPolygonLayerUid(uid: string) {
+    return `polygon-layer-${uid}`;
+}
+
+function generateLayerId(id?: string | undefined) {
+    const uid = id || generateRandomId();
     const geojsonSource = `geojson-source-${uid}`;
 
     const lineLayer = `line-layer-${uid}`;
@@ -24,6 +28,10 @@ type Props = {
     lineColor?: string;
     lineWidth?: number;
     disableLine?: boolean;
+    show?: boolean;
+    fitbounds?: boolean;
+    beforeLayer?: string;
+    uid?: string;
 };
 
 function usePolygonLayer({
@@ -35,12 +43,17 @@ function usePolygonLayer({
     lineColor,
     lineWidth = 3,
     disableLine = false,
+    show = true,
+    fitbounds = true,
+    beforeLayer,
+    uid,
 }: Props) {
     const { myMap, mapStatus } = useMapLibreContext();
 
     const polygonSetting = useRef(generateLayerId());
 
     useEffect(() => {
+        if (!show) return;
         if (!geojsonData) return;
         if (mapStatus !== LoadingState.SUCCESS) return;
         const { geojsonSource, lineLayer, polygonLayer } = polygonSetting.current;
@@ -105,8 +118,7 @@ function usePolygonLayer({
             });
 
             // ===================== Add POLYGON ========================================
-
-            map.addLayer({
+            const layerProps: MapLibreGL.AddLayerObject = {
                 id: polygonLayer,
                 type: 'fill',
                 source: geojsonSource,
@@ -115,7 +127,12 @@ function usePolygonLayer({
                     'fill-opacity': fillOpacity,
                     'fill-outline-color': fillOutlineColor || color,
                 },
-            });
+            };
+            if (beforeLayer && map.getLayer(beforeLayer)) {
+                map.addLayer(layerProps, beforeLayer);
+            } else {
+                map.addLayer(layerProps);
+            }
 
             // ===================== Add LINE ========================================
 
@@ -140,7 +157,7 @@ function usePolygonLayer({
             map.on('click', polygonLayer, onClickLayer);
 
             const bbox = getBboxFromGeojson(geojsonData);
-            if (bbox) {
+            if (bbox && fitbounds) {
                 map.fitBounds(bbox as LngLatBoundsLike);
             }
         };
@@ -174,6 +191,9 @@ function usePolygonLayer({
         disableLine,
         lineColor,
         lineWidth,
+        show,
+        fitbounds,
+        beforeLayer,
     ]);
 
     return polygonSetting;

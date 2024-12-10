@@ -9,6 +9,9 @@ import { useEffect, useRef } from 'react';
 export function getPointLayerUid(uid: string) {
     return `point-layer-${uid}`;
 }
+export function getPointLabelLayerUid(uid: string) {
+    return `symbol-layer-${uid}`;
+}
 
 function generateLayerId(id?: string | undefined) {
     const uid = id || generateRandomId();
@@ -29,6 +32,7 @@ type Props = {
     circleRadius?: number;
     circleStrokeColor?: string;
     circleStrokeWidth?: number;
+    show?: boolean;
 };
 
 function usePointLayer({
@@ -41,12 +45,15 @@ function usePointLayer({
     circleStrokeColor = 'white',
     circleStrokeWidth = 2,
     circleRadius = 4,
+
+    show = true,
 }: Props) {
     const { myMap, mapStatus } = useMapLibreContext();
 
     const pointSetting = useRef(generateLayerId(uid));
 
     useEffect(() => {
+        if (!show) return;
         if (!Array.isArray(jsonData)) return;
         if (mapStatus !== LoadingState.SUCCESS) return;
         const { geojsonSource, pointLayer, symbolLayer } = pointSetting.current;
@@ -214,6 +221,7 @@ function usePointLayer({
         circleStrokeColor,
         circleStrokeWidth,
         beforeLayer,
+        show,
     ]);
 
     return pointSetting;
