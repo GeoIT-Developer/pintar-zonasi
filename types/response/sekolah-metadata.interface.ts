@@ -3,6 +3,7 @@ export interface SekolahMetadataType {
     name: string;
     description: string;
     type: string;
+    zonasi: boolean;
     level: string;
     bbox: Bbox;
     created_at: string;

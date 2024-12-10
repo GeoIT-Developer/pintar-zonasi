@@ -16,6 +16,7 @@ import { Toast } from 'primereact/toast';
 import React, { useEffect, useRef, useState } from 'react';
 import { Dropdown } from 'primereact/dropdown';
 import { LIST_KATEGORI_SEKOLAH, LIST_TINGKATAN_SEKOLAH } from '@/utils/constant';
+import { Checkbox } from 'primereact/checkbox';
 
 const THIS_ROUTE = ROUTE.DATA.SEKOLAH;
 
@@ -29,7 +30,7 @@ export default function FormSection({ inputFile, setInputFile, setJsonData }: Pr
     const router = useRouter();
     const [dialogUnggah, setDialogUnggah] = useState(false);
     const toast = useRef<Toast>(null);
-    const [inputData, setInputData] = useState({ nama: '', deskripsi: '', level: '', jenis: '' });
+    const [inputData, setInputData] = useState({ nama: '', deskripsi: '', level: '', jenis: '', zonasi: false });
     const refUpload = useRef<FileUpload>(null);
 
     const apiUnggahSekolah = useAPI<
@@ -40,6 +41,7 @@ export default function FormSection({ inputFile, setInputFile, setJsonData }: Pr
             description: string;
             level: string;
             type: string;
+            zonasi: boolean;
         }
     >(API.postUploadSekolah, {
         onSuccess: () => {
@@ -74,6 +76,7 @@ export default function FormSection({ inputFile, setInputFile, setJsonData }: Pr
             eFile: inputFile,
             type: inputData.jenis,
             level: inputData.level,
+            zonasi: inputData.zonasi,
         });
         toast.current?.show({
             severity: 'info',
@@ -155,6 +158,21 @@ export default function FormSection({ inputFile, setInputFile, setJsonData }: Pr
                             optionValue="id"
                             placeholder="-- Pilih Jenis Sekolah --"
                         />
+                    </div>
+                    <div className="flex align-items-center mb-4">
+                        <Checkbox
+                            inputId="zonasi"
+                            onChange={(e) => {
+                                const eChecked = Boolean(e.checked);
+                                setInputData((oldState) => {
+                                    return { ...oldState, zonasi: eChecked };
+                                });
+                            }}
+                            checked={inputData.zonasi}
+                        />
+                        <label htmlFor="zonasi" className="ml-2">
+                            Penerimaan Zonasi
+                        </label>
                     </div>
 
                     <div className="field">
