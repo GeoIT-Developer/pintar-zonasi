@@ -92,14 +92,17 @@ export default function ResultSection({ listLayer, metadata_id }: Props) {
         <>
             <MapCard metadata_id={metadata_id} listLayer={listLayer} onResult={onResult} />
 
-            {sekolahData.length > 0 && <PreviewCSVCard dataset={sekolahData} column={COLUMN} />}
+            {sekolahData.length > 0 && (
+                <>
+                    <Fieldset legend="Apa Kata AI?">
+                        {isLoading && <ProgressSpinner style={{ width: '50px' }} />}
+                        <ReactMarkdown>{kataAI}</ReactMarkdown>
+                    </Fieldset>
+                    <PreviewCSVCard dataset={sekolahData} column={COLUMN} />
+                </>
+            )}
 
             {isLoading && <ProgressSpinner style={{ width: '50px' }} />}
-            {kataAI && (
-                <Fieldset legend="Apa Kata AI?">
-                    <ReactMarkdown>{kataAI}</ReactMarkdown>
-                </Fieldset>
-            )}
         </>
     );
 }
