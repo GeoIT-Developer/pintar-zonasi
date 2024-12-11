@@ -25,7 +25,11 @@ function getIsochroneAndReverse(geojson: ObjectLiteral) {
     };
 }
 
-type Props = { metadata_id: string; listLayer: LayerSettingType[]; onResult: (res: ZonasiResponseType) => void };
+type Props = {
+    metadata_id: string;
+    listLayer: LayerSettingType[];
+    onResult: (res: ZonasiResponseType, coor: CoordType) => void;
+};
 
 export default function MapMenu({ metadata_id, listLayer, onResult }: Props) {
     const toast = useToastContext();
@@ -50,7 +54,7 @@ export default function MapMenu({ metadata_id, listLayer, onResult }: Props) {
         onSuccess: (_raw, res) => {
             const eData = res?.data;
             setZonasiData(eData);
-            onResult(eData);
+            onResult(eData, myCoordinate);
         },
     });
 

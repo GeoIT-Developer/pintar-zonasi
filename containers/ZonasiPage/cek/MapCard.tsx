@@ -4,7 +4,11 @@ import MapMenu from './MapMenu';
 import { LayerSettingType } from '@/types/layer.type';
 import { ZonasiResponseType } from '@/types/response/zonasi.interface';
 
-type Props = { metadata_id: string; listLayer: LayerSettingType[]; onResult: (res: ZonasiResponseType) => void };
+type Props = {
+    metadata_id: string;
+    listLayer: LayerSettingType[];
+    onResult: (res: ZonasiResponseType, coor: { lat: number; lon: number }) => void;
+};
 
 export default function MapCard({ metadata_id, listLayer, onResult }: Props) {
     return (

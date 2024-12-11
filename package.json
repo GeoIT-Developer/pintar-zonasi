@@ -16,6 +16,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.21.0",
     "@mapbox/togeojson": "^0.16.2",
     "@turf/turf": "^7.1.0",
     "@types/node": "20.3.1",
@@ -32,6 +33,7 @@
     "primereact": "10.2.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-markdown": "^8.0.6",
     "shpjs": "^6.1.0",
     "typescript": "5.1.3"
   },

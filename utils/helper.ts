@@ -259,3 +259,21 @@ export function concaveHullGeojson(feature: ObjectLiteral) {
     const hull = turf.concave(points, { units: 'kilometers', maxEdge: 0.5 });
     return hull;
 }
+
+export function arrayToTableString(arr: ObjectLiteral[]) {
+    if (arr.length === 0) return '';
+
+    // Get the headers from the keys of the first object
+    const headers = Object.keys(arr[0]);
+
+    // Create the header row as a string
+    let tableString = headers.join('\t') + '\n';
+
+    // Create data rows
+    arr.forEach((item) => {
+        const row = headers.map((header) => item[header]).join('\t');
+        tableString += row + '\n';
+    });
+
+    return tableString.trim(); // Remove trailing new line
+}
